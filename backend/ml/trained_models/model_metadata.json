@@ -1,0 +1,22 @@
+{
+  "model_type": "IsolationForest",
+  "contamination": 0.05,
+  "random_state": 42,
+  "training_date": "2026-11-06T06:24:47.144624",
+  "n_train_samples": 760,
+  "n_test_samples": 200,
+  "n_train_participants": 19,
+  "n_test_participants": 5,
+  "features": [
+    "heart_rate_bpm",
+    "spo2_pct",
+    "skin_temp_c",
+    "steps",
+    "age"
+  ],
+  "train_normal_count": 722,
+  "train_anomaly_count": 38,
+  "test_normal_count": 184,
+  "test_anomaly_count": 16,
+  "contamination_actual": 0.05
+}

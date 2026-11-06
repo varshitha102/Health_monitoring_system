@@ -1,0 +1,44 @@
+/* Tailwind CSS v4 entry point.
+   The previous file used `@tailwind base/components/utilities`, which are Tailwind v3
+   directives. With tailwindcss v4 installed they are ignored, so almost no utility
+   classes were emitted and the entire UI rendered unstyled. */
+@import 'tailwindcss';
+
+/* Explicit source scan (v4 auto-detects, but this makes the build deterministic). */
+@source "./**/*.{js,jsx,ts,tsx}";
+@source "../index.html";
+
+@config "../tailwind.config.js";
+
+/* Leaflet CSS is imported from LocationMap.jsx. Only the container sizing
+   that Leaflet requires is handled here. */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  font: inherit;
+}
+
+/* Tidy scrollbars inside the scrollable panels */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(148 163 184 / 0.5);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}

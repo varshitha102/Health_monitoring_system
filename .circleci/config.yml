@@ -1,0 +1,84 @@
+version: 2.1
+
+jobs:
+  build-and-test-backend:
+    docker:
+      - image: cimg/python:3.11
+    working_directory: ~/repo/backend
+    steps:
+      - checkout:
+          path: ~/repo
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - backend/venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            pytest
+
+  build-frontend:
+    docker:
+      - image: cimg/node:18
+    working_directory: ~/repo/frontend
+    steps:
+      - checkout:
+          path: ~/repo
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          paths:
+            - frontend/node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Build frontend
+          command: npm run build
+      - persist_to_workspace:
+          root: ~/repo/frontend
+          paths:
+            - dist
+
+  deploy-render:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          at: ~/repo/frontend
+      - checkout:
+          path: ~/repo
+      - run:
+          name: Install Render CLI
+          command: curl -fsSL https://render.com/install.sh | sh
+      - run:
+          name: Deploy to Render
+          command: |
+            echo "Deploying to Render..."
+            # You'll need to set up Render API credentials in CircleCI
+            # render-cli deploy --service health-monitoring-backend --key $RENDER_API_KEY
+            # render-cli deploy --service health-monitoring-frontend --key $RENDER_API_KEY
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - build-and-test-backend
+      - build-frontend
+      - deploy-render:
+          requires:
+            - build-and-test-backend
+            - build-frontend
