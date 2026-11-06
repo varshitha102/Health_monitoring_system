@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/api",
+      "destination": "https://health-monitoring-backend.onrender.com/api"
+    },
+    {
+      "source": "/ws",
+      "destination": "https://health-monitoring-backend.onrender.com/ws"
+    }
+  ]
+}
